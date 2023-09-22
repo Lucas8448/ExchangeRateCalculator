@@ -1,25 +1,71 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
-function App() {
+const App = () => {
+  const [rates, setRates] = useState({});
+  const [amount, setAmount] = useState(1);
+  const [fromCurrency, setFromCurrency] = useState('NOK');
+  const [toCurrency, setToCurrency] = useState('GBP');
+  const [convertedAmount, setConvertedAmount] = useState(null);
+  const API_KEY = '';
+
+  useEffect(() => {
+    fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${fromCurrency}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result === 'success') {
+          setRates(data.conversion_rates);
+        } else {
+          console.error(`Error: ${data['error-type']}`);
+        }
+      });
+  }, [fromCurrency]);
+
+  const handleConvert = () => {
+    if (rates[toCurrency]) {
+      setConvertedAmount(amount * rates[toCurrency]);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <h1>Currency Converter</h1>
+      <div>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <select
+          value={fromCurrency}
+          onChange={(e) => setFromCurrency(e.target.value)}
         >
-          Learn React
-        </a>
-      </header>
+          {Object.keys(rates).map((currency) => (
+            <option key={currency} value={currency}>
+              {currency}
+            </option>
+          ))}
+        </select>
+        to
+        <select
+          value={toCurrency}
+          onChange={(e) => setToCurrency(e.target.value)}
+        >
+          {Object.keys(rates).map((currency) => (
+            <option key={currency} value={currency}>
+              {currency}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleConvert}>Convert</button>
+      </div>
+      {convertedAmount !== null && (
+        <div>
+          {amount} {fromCurrency} is approximately {convertedAmount.toFixed(2)}{' '}
+          {toCurrency}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
