@@ -6,7 +6,7 @@ const App = () => {
   const [fromCurrency, setFromCurrency] = useState('NOK');
   const [toCurrency, setToCurrency] = useState('GBP');
   const [convertedAmount, setConvertedAmount] = useState(null);
-  const API_KEY = '';
+  const API_KEY = '262a36b33262d887a482c003';
 
   useEffect(() => {
     fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${fromCurrency}`)
@@ -20,11 +20,11 @@ const App = () => {
       });
   }, [fromCurrency]);
 
-  const handleConvert = () => {
+  useEffect(() => {
     if (rates[toCurrency]) {
       setConvertedAmount(amount * rates[toCurrency]);
     }
-  };
+  }, [amount, fromCurrency, toCurrency, rates]);
 
   return (
     <div className="App">
@@ -56,7 +56,6 @@ const App = () => {
             </option>
           ))}
         </select>
-        <button onClick={handleConvert}>Convert</button>
       </div>
       {convertedAmount !== null && (
         <div>
