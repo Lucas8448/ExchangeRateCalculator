@@ -59,7 +59,7 @@ const App = () => {
       </div>
       {convertedAmount !== null && (
         <div>
-          {amount} {fromCurrency} is approximately {convertedAmount.toFixed(2)}{' '}
+          {amount} {fromCurrency} is approximately {convertedAmount.toFixed(4)}{' '}
           {toCurrency}
         </div>
       )}
