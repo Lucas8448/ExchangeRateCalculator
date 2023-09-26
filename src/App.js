@@ -7,6 +7,13 @@ const App = () => {
   const [toCurrency, setToCurrency] = useState('GBP');
   const [convertedAmount, setConvertedAmount] = useState(null);
   const API_KEY = '262a36b33262d887a482c003';
+  const currencyNames = require('./assets/data/conversions.json');
+
+
+  const codeToName = {};
+  for (const [code, name] of Object.entries(currencyNames)) {
+    codeToName[code] = name;
+  }
 
   useEffect(() => {
     fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${fromCurrency}`)
@@ -14,6 +21,7 @@ const App = () => {
       .then((data) => {
         if (data.result === 'success') {
           setRates(data.conversion_rates);
+          console.log(data);
         } else {
           console.error(`Error: ${data['error-type']}`);
         }
@@ -41,7 +49,7 @@ const App = () => {
         >
           {Object.keys(rates).map((currency) => (
             <option key={currency} value={currency}>
-              {currency}
+              {currency} ({codeToName[currency]})
             </option>
           ))}
         </select>
@@ -52,7 +60,7 @@ const App = () => {
         >
           {Object.keys(rates).map((currency) => (
             <option key={currency} value={currency}>
-              {currency}
+              {currency} ({codeToName[currency]})
             </option>
           ))}
         </select>

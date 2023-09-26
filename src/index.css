@@ -24,6 +24,12 @@ h1 {
   color: #333;
 }
 
+div>div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 input[type=number],
 select,
 button {
@@ -31,6 +37,10 @@ button {
   margin: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+select {
+  min-width: 200px;
 }
 
 button {
