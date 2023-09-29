@@ -40,13 +40,14 @@ const Result = ({ amount, fromCurrency, convertedAmount, toCurrency }) => (
 );
 
 const App = () => {
-  const [rates, setRates] = useState({});
+  const [baseRates, setBaseRates] = useState({});
   const [amount, setAmount] = useState(1);
   const [fromCurrency, setFromCurrency] = useState('NOK');
   const [toCurrency, setToCurrency] = useState('GBP');
   const [convertedAmount, setConvertedAmount] = useState(null);
 
   const API_KEY = '262a36b33262d887a482c003';
+  const BASE_CURRENCY = 'USD';
 
   const isValidAmount = (amount) => amount > 0;
 
@@ -56,20 +57,21 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${fromCurrency}`)
+    fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${BASE_CURRENCY}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.result === 'success') {
-          setRates(data.conversion_rates);
+          setBaseRates(data.conversion_rates);
         }
       });
-  }, [fromCurrency]);
+  }, []);
 
   useEffect(() => {
-    if (rates[toCurrency]) {
-      setConvertedAmount(amount * rates[toCurrency]);
+    if (baseRates[toCurrency] && baseRates[fromCurrency]) {
+      const rate = baseRates[toCurrency] / baseRates[fromCurrency];
+      setConvertedAmount(amount * rate);
     }
-  }, [amount, toCurrency, rates]);
+  }, [amount, toCurrency, fromCurrency, baseRates]);
 
   return (
     <div className="App min-h-screen bg-gray-100 flex items-center justify-center p-4">
